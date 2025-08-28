@@ -1,0 +1,15 @@
+{
+  "watch": ["backend/"],
+  "ext": "js,json",
+  "ignore": [
+    "node_modules/",
+    "renderer/",
+    "main.js",
+    "preload.js",
+    "*.exe",
+    "dist/"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  }
+}

@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Ajuste de Precios - <b>Productos</b></title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+  </head>
+  <body>
+    <div class="draggable-area">
+      <button id="minimize-button"><i class="bi bi-dash"></i></button>
+      <button id="maximize-button"><i class="bi bi-fullscreen"></i></button>
+      <button id="close-button"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="container">
+      <h1>Ajuste de Precios - <b>Productos</b></h1>
+      <div class="title">
+        <h3 class="mt-4">Ajuste Individual</h3>
+        <div
+          id="ajuste-label"
+          class="alert alert-success d-none"
+          role="alert"
+        ></div>
+      </div>
+      <form id="ajusteForm">
+        <div class="mb-2">
+          <select id="instancia-ajuste" name="instancia" class="form-select">
+            <option value="">Todas las instancias</option>
+          </select>
+        </div>
+        <div class="row mb-2">
+          <div class="col">Precio 1</div>
+          <div class="col">
+            <select name="op1" class="form-select">
+              <option value="">Sin cambio</option>
+              <option value="up">Aumentar</option>
+              <option value="down">Disminuir</option>
+            </select>
+          </div>
+          <div class="col">
+            <input
+              type="number"
+              name="val1"
+              class="form-control"
+              placeholder="%"
+            />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col">Precio 2</div>
+          <div class="col">
+            <select name="op2" class="form-select">
+              <option value="">Sin cambio</option>
+              <option value="up">Aumentar</option>
+              <option value="down">Disminuir</option>
+            </select>
+          </div>
+          <div class="col">
+            <input
+              type="number"
+              name="val2"
+              class="form-control"
+              placeholder="%"
+            />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col">Precio 3</div>
+          <div class="col">
+            <select name="op3" class="form-select">
+              <option value="">Sin cambio</option>
+              <option value="up">Aumentar</option>
+              <option value="down">Disminuir</option>
+            </select>
+          </div>
+          <div class="col">
+            <input
+              type="number"
+              name="val3"
+              class="form-control"
+              placeholder="%"
+            />
+          </div>
+        </div>
+        <button type="submit" class="btn btn-outline-danger mt-3">
+          Aplicar Cambios
+        </button>
+      </form>
+      <div class="title">
+        <h3 class="mt-5">Ajuste Basado en Precio 2</h3>
+        <div
+          id="basado-label"
+          class="alert alert-success d-none"
+          role="alert"
+        ></div>
+      </div>
+      <form id="basadoForm">
+        <div class="mb-2">
+          <select id="instancia-basado" name="instancia" class="form-select">
+            <option value="">Todas las instancias</option>
+          </select>
+        </div>
+        <div class="mb-2">
+          <select name="modo" class="form-select">
+            <option value="up">Aumentar</option>
+            <option value="down">Disminuir</option>
+          </select>
+        </div>
+        <div class="mb-2">
+          <input
+            type="number"
+            name="porcentaje"
+            class="form-control"
+            placeholder="Porcentaje"
+          />
+        </div>
+        <button type="submit" class="btn btn-outline-danger">
+          Actualizar Precio 3
+        </button>
+      </form>
+    </div>
+    <script src="js/aumentoPreciosPrd.js"></script>
+  </body>
+</html>
