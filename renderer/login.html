@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+</head>
+<body>
+  <h2>Iniciar Sesión</h2>
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="Usuario" required /><br>
+    <input type="password" id="password" placeholder="Contraseña" required /><br>
+    <button type="submit">Entrar</button>
+    <div id="error" style="color:red;"></div>
+  </form>
+  <script>
+    const { ipcRenderer } = require('electron');
+    const form = document.getElementById('loginForm');
+    const errorDiv = document.getElementById('error');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      ipcRenderer.send('login-attempt', {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value
+      });
+    });
+    ipcRenderer.on('login-failed', (event, message) => {
+      errorDiv.textContent = message;
+    });
+  </script>
+</body>
+</html>

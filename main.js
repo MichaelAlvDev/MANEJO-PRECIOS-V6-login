@@ -23,6 +23,7 @@ server.use('/api/servicios', serviciosRoutes);
 const PORT = 3000;
 
 let mainWin = null;
+let loginWindow = null;
 let aumentoPreciosWin = null;
 let precioReferencialWin = null;
 let aumentoPreciosSrvWin = null;
@@ -73,11 +74,27 @@ function stopServer() {
   });
 }
 
+function createLoginWindow() {
+  loginWindow = new BrowserWindow({
+    width: 400,
+    height: 300,
+    resizable: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    }
+  });
+  loginWindow.loadFile('renderer/login.html');
+  loginWindow.on('closed', () => loginWindow = null);
+}
+
+
 function createMainWindow() {
   mainWin = new BrowserWindow({
     width: 400,
     height: 450,
     resizable: true,
+    show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
@@ -255,7 +272,7 @@ app.whenReady().then(async () => {
     console.log('Modo desarrollo: el servidor se ejecuta por separado');
   }
 
-  createMainWindow();
+  createLoginWindow();
 });
 
 app.on('window-all-closed', async () => {
@@ -282,7 +299,7 @@ app.on('exit', async () => {
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    createMainWindow();
+    createLoginWindow();
   }
 });
 
@@ -430,3 +447,17 @@ async function checkDatabaseConfiguration() {
 
   return true;
 }
+
+// Recibe credenciales desde login.html
+ipcMain.on('login-attempt', (event, { username, password }) => {
+  // Aquí deberías validar usuario y contraseña (puedes consultar una base de datos, etc.)
+  if (username === 'admin' && password === '1234') {
+    // Login exitoso
+    createMainWindow();
+    mainWin.show();
+    loginWindow.close();
+  } else {
+    // Login fallido
+    event.reply('login-failed', 'Usuario o contraseña incorrectos');
+  }
+});
