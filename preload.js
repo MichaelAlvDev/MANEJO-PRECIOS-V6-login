@@ -16,9 +16,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // APIs para configuración de base de datos
   checkDatabaseConfig: () => ipcRenderer.invoke('check-database-config'),
   testDatabaseConnection: () => ipcRenderer.invoke('test-database-connection'),
-  saveDatabaseConfig: (config) => ipcRenderer.invoke('save-database-config', config),
+  saveDatabaseConfig: config =>
+    ipcRenderer.invoke('save-database-config', config),
   getDatabaseConfig: () => ipcRenderer.invoke('get-database-config'),
-  testDatabaseConfig: (config) => ipcRenderer.invoke('test-database-config', config),
-  testDatabaseSSLConfigs: (config) => ipcRenderer.invoke('test-database-ssl-configs', config),
+  testDatabaseConfig: config =>
+    ipcRenderer.invoke('test-database-config', config),
+  testDatabaseSSLConfigs: config =>
+    ipcRenderer.invoke('test-database-ssl-configs', config),
   restartApp: () => ipcRenderer.invoke('restart-app'),
+  loginAttempt: (credentials) => ipcRenderer.send('login-attempt', credentials),
+  onLoginFailed: (callback) => ipcRenderer.on('login-failed', (event, message) => callback(message)),
 });

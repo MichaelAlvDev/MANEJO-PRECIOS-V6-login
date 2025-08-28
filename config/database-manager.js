@@ -6,13 +6,14 @@ const crypto = require('crypto');
 class DatabaseManager {
   constructor() {
     // En producción, guardar en el directorio de datos de la aplicación
-    const userDataPath = process.env.NODE_ENV === 'development' 
-      ? path.join(__dirname, '..') 
-      : path.join(process.env.APPDATA || process.env.HOME, '.manejo-precios');
-    
+    const userDataPath =
+      process.env.NODE_ENV === 'development'
+        ? path.join(__dirname, '..')
+        : path.join(process.env.APPDATA || process.env.HOME, '.manejo-precios');
+
     this.configDir = userDataPath;
     this.configFile = path.join(this.configDir, '.db-config');
-    
+
     // Crear directorio si no existe
     if (!fs.existsSync(this.configDir)) {
       fs.mkdirSync(this.configDir, { recursive: true });
@@ -69,8 +70,8 @@ class DatabaseManager {
           trustServerCertificate: true,
           enableArithAbort: true,
           requestTimeout: 30000,
-          connectionTimeout: 30000
-        }
+          connectionTimeout: 30000,
+        },
       };
 
       const encryptedData = this.encrypt(JSON.stringify(configData));
@@ -85,7 +86,7 @@ class DatabaseManager {
   // Probar conexión
   async testConnection(config = null) {
     const testConfig = config || this.getConfiguration();
-    
+
     if (!testConfig) {
       throw new Error('No hay configuración disponible');
     }
@@ -99,8 +100,8 @@ class DatabaseManager {
         enableArithAbort: true,
         requestTimeout: 30000,
         connectionTimeout: 30000,
-        ...testConfig.options
-      }
+        ...testConfig.options,
+      },
     };
 
     try {
@@ -109,18 +110,20 @@ class DatabaseManager {
       return { success: true, message: 'Conexión exitosa' };
     } catch (error) {
       // Manejar específicamente errores de certificado SSL
-      if (error.message.includes('self signed certificate') || 
-          error.message.includes('certificate') ||
-          error.message.includes('SSL')) {
-        return { 
-          success: false, 
-          message: `Error de certificado SSL. Verifique que el servidor SQL Server esté configurado correctamente para conexiones sin SSL o que el certificado sea válido.` 
+      if (
+        error.message.includes('self signed certificate') ||
+        error.message.includes('certificate') ||
+        error.message.includes('SSL')
+      ) {
+        return {
+          success: false,
+          message: `Error de certificado SSL. Verifique que el servidor SQL Server esté configurado correctamente para conexiones sin SSL o que el certificado sea válido.`,
         };
       }
-      
-      return { 
-        success: false, 
-        message: `Error de conexión: ${error.message}` 
+
+      return {
+        success: false,
+        message: `Error de conexión: ${error.message}`,
       };
     }
   }
@@ -141,8 +144,8 @@ class DatabaseManager {
         enableArithAbort: true,
         requestTimeout: 30000,
         connectionTimeout: 30000,
-        ...config.options
-      }
+        ...config.options,
+      },
     };
   }
 
@@ -168,25 +171,25 @@ class DatabaseManager {
         options: {
           encrypt: false,
           trustServerCertificate: true,
-          enableArithAbort: true
-        }
+          enableArithAbort: true,
+        },
       },
       {
         name: 'SSL con certificado de confianza',
         options: {
           encrypt: true,
           trustServerCertificate: true,
-          enableArithAbort: true
-        }
+          enableArithAbort: true,
+        },
       },
       {
         name: 'SSL estricto',
         options: {
           encrypt: true,
           trustServerCertificate: false,
-          enableArithAbort: true
-        }
-      }
+          enableArithAbort: true,
+        },
+      },
     ];
 
     const results = [];
@@ -198,19 +201,19 @@ class DatabaseManager {
           options: {
             ...sslConfig.options,
             requestTimeout: 10000,
-            connectionTimeout: 10000
-          }
+            connectionTimeout: 10000,
+          },
         };
 
         const pool = await sql.connect(testConfig);
         await pool.close();
-        
+
         results.push({
           name: sslConfig.name,
           success: true,
-          message: 'Conexión exitosa'
+          message: 'Conexión exitosa',
         });
-        
+
         // Si la primera configuración funciona, no probar las demás
         if (sslConfig.name === 'Sin SSL (recomendado para desarrollo)') {
           break;
@@ -219,7 +222,7 @@ class DatabaseManager {
         results.push({
           name: sslConfig.name,
           success: false,
-          message: error.message
+          message: error.message,
         });
       }
     }

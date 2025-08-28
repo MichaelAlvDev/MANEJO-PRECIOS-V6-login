@@ -1,42 +1,51 @@
 # Funcionalidades de Servicios Implementadas
 
 ## Descripción
+
 Se han implementado las mismas funcionalidades que tienen las ventanas de productos (PRD) en las ventanas de servicios (SRV), pero trabajando con la tabla `SASERV` en lugar de `SAPROD`, y con instancias de tipo 1 en lugar de tipo 0.
 
 ## Diferencias Clave
 
 ### Tabla de Datos
+
 - **Productos**: Trabaja con la tabla `SAPROD`
 - **Servicios**: Trabaja con la tabla `SASERV`
 
 ### Campos de Precios
+
 - **Productos**: `saprod.precioi1`, `saprod.precioi2`, `saprod.precioi3`
 - **Servicios**: `saserv.precioi1`, `saserv.precioi2`, `saserv.precioi3`
 
 ### Instancias
+
 - **Productos**: `sainsta.tipoins = '0'`
 - **Servicios**: `sainsta.tipoins = '1'`
 
 ## Funcionalidades Implementadas
 
 ### 1. Ajuste de Precios de Servicios
+
 **Archivo**: `renderer/aumentoPreciosSrv.html` y `renderer/js/aumentoPreciosSrv.js`
 
 #### Características:
+
 - **Ajuste Individual**: Permite modificar porcentualmente los precios 1, 2 y 3
 - **Filtro por Instancia**: Opción para aplicar cambios solo a una instancia específica
 - **Ajuste Basado en Precio 2**: Permite actualizar el precio 3 basándose en el precio 2
 - **Validación**: Verifica que los datos sean válidos antes de aplicar cambios
 
 #### Endpoints utilizados:
+
 - `GET /api/servicios/instancias` - Obtener instancias de servicios
 - `POST /api/servicios/aumentar` - Aplicar ajustes porcentuales
 - `POST /api/servicios/precio3-basado-en-2` - Actualizar precio 3 basado en precio 2
 
 ### 2. Precio Referencial de Servicios
+
 **Archivo**: `renderer/precioReferencialSrv.html` y `renderer/js/precioReferencialSrv.js`
 
 #### Características:
+
 - **Lista de Servicios**: Muestra todos los servicios con sus precios actuales
 - **Búsqueda**: Filtro por código, descripción o instancia
 - **Paginación**: Navegación entre páginas de resultados
@@ -45,6 +54,7 @@ Se han implementado las mismas funcionalidades que tienen las ventanas de produc
 - **Validación en Tiempo Real**: Verificación de datos antes de guardar
 
 #### Endpoints utilizados:
+
 - `GET /api/servicios` - Obtener lista de servicios con paginación y búsqueda
 - `PUT /api/servicios/:codserv` - Actualizar precios de un servicio específico
 
@@ -77,7 +87,9 @@ Se han implementado las mismas funcionalidades que tienen las ventanas de produc
 ## Configuración del Servidor
 
 ### Archivo: `main.js`
+
 Se agregó la ruta de servicios al servidor Express:
+
 ```javascript
 const serviciosRoutes = require('./backend/routes/servicios');
 server.use('/api/servicios', serviciosRoutes);
@@ -86,6 +98,7 @@ server.use('/api/servicios', serviciosRoutes);
 ## Estructura de Datos
 
 ### Tabla SASERV
+
 ```sql
 CREATE TABLE SASERV (
   codserv VARCHAR(20) PRIMARY KEY,
@@ -99,9 +112,10 @@ CREATE TABLE SASERV (
 ```
 
 ### Tabla SAINSTA (para servicios)
+
 ```sql
-SELECT CodInst, Descrip, InsPadre 
-FROM SAINSTA 
+SELECT CodInst, Descrip, InsPadre
+FROM SAINSTA
 WHERE tipoins = '1'
 ORDER BY Descrip;
 ```
@@ -109,24 +123,28 @@ ORDER BY Descrip;
 ## Uso
 
 ### Ajuste de Precios
+
 1. Abrir "Ajuste Precios Srv" desde el menú principal
 2. Seleccionar instancia (opcional)
 3. Configurar ajustes para precios 1, 2 y 3
 4. Hacer clic en "Aplicar Cambios"
 
 ### Precio Referencial
+
 1. Abrir "Precio Referencial Srv" desde el menú principal
 2. Usar el campo de búsqueda para filtrar servicios
 3. Modificar precios directamente en la tabla
 4. Guardar cambios individuales o usar "Actualizar Todo"
 
 ## Compatibilidad
+
 - Mantiene la misma interfaz de usuario que las ventanas de productos
 - Usa las mismas validaciones y manejo de errores
 - Compatible con la configuración de base de datos existente
 - Funciona tanto en modo desarrollo como en producción
 
 ## Notas Importantes
+
 - Los servicios se identifican por `codserv` en lugar de `codprod`
 - Las instancias de servicios tienen `tipoins = '1'`
 - Todas las operaciones respetan la estructura jerárquica de instancias

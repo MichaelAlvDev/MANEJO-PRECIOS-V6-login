@@ -12,7 +12,9 @@ router.get('/', async (req, res) => {
   try {
     const config = dbManager.getConfigForBackend();
     if (!config) {
-      return res.status(500).json({ error: 'Configuración de base de datos no encontrada' });
+      return res
+        .status(500)
+        .json({ error: 'Configuración de base de datos no encontrada' });
     }
     const pool = await sql.connect(config);
     const request = pool.request();
@@ -54,7 +56,9 @@ router.put('/:codserv', async (req, res) => {
   try {
     const config = dbManager.getConfigForBackend();
     if (!config) {
-      return res.status(500).json({ error: 'Configuración de base de datos no encontrada' });
+      return res
+        .status(500)
+        .json({ error: 'Configuración de base de datos no encontrada' });
     }
     const pool = await sql.connect(config);
     await pool.request().query(`
@@ -91,7 +95,9 @@ router.post('/aumentar', async (req, res) => {
   try {
     const config = dbManager.getConfigForBackend();
     if (!config) {
-      return res.status(500).json({ error: 'Configuración de base de datos no encontrada' });
+      return res
+        .status(500)
+        .json({ error: 'Configuración de base de datos no encontrada' });
     }
     const pool = await sql.connect(config);
 
@@ -122,9 +128,10 @@ router.post('/aumentar', async (req, res) => {
 ${result.recordset
   .map(row => {
     const original = row[campo];
-    let nuevo = ajuste.op === 'up'
-      ? original * (1 + ajuste.val / 100)
-      : original * (1 - ajuste.val / 100);
+    let nuevo =
+      ajuste.op === 'up'
+        ? original * (1 + ajuste.val / 100)
+        : original * (1 - ajuste.val / 100);
     return `WHEN '${row.codserv}' THEN ${nuevo.toFixed(2)}`;
   })
   .join('\n')}
@@ -143,7 +150,9 @@ ELSE ${campo} END`;
       await pool.request().query(updateQuery);
     }
 
-    res.status(200).json({ message: 'Precios de servicios actualizados correctamente.' });
+    res
+      .status(200)
+      .json({ message: 'Precios de servicios actualizados correctamente.' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -155,7 +164,9 @@ router.post('/precio3-basado-en-2', async (req, res) => {
   try {
     const config = dbManager.getConfigForBackend();
     if (!config) {
-      return res.status(500).json({ error: 'Configuración de base de datos no encontrada' });
+      return res
+        .status(500)
+        .json({ error: 'Configuración de base de datos no encontrada' });
     }
     const pool = await sql.connect(config);
 
@@ -207,7 +218,9 @@ router.get('/instancias', async (req, res) => {
   try {
     const config = dbManager.getConfigForBackend();
     if (!config) {
-      return res.status(500).json({ error: 'Configuración de base de datos no encontrada' });
+      return res
+        .status(500)
+        .json({ error: 'Configuración de base de datos no encontrada' });
     }
     const pool = await sql.connect(config);
     const result = await pool.request().query(`

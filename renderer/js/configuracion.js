@@ -40,7 +40,7 @@ function showStatus(message, isSuccess = true) {
   statusLabel.textContent = message;
   statusLabel.className = `alert ${isSuccess ? 'alert-success' : 'alert-danger'}`;
   statusLabel.classList.remove('d-none');
-  
+
   // Ocultar mensaje después de 5 segundos
   setTimeout(() => {
     statusLabel.classList.add('d-none');
@@ -53,7 +53,7 @@ async function testConnection() {
     server: serverInput.value.trim(),
     database: databaseInput.value.trim(),
     user: usernameInput.value.trim(),
-    password: passwordInput.value
+    password: passwordInput.value,
   };
 
   // Validar campos requeridos
@@ -65,7 +65,7 @@ async function testConnection() {
   try {
     showStatus('Probando conexión...', true);
     const result = await window.electronAPI.testDatabaseConfig(config);
-    
+
     if (result.success) {
       showStatus('Conexión exitosa!', true);
       return true;
@@ -85,7 +85,7 @@ async function saveConfiguration() {
     server: serverInput.value.trim(),
     database: databaseInput.value.trim(),
     user: usernameInput.value.trim(),
-    password: passwordInput.value
+    password: passwordInput.value,
   };
 
   // Validar campos requeridos
@@ -105,8 +105,11 @@ async function saveConfiguration() {
     // Guardar configuración
     const saved = await window.electronAPI.saveDatabaseConfig(config);
     if (saved) {
-      showStatus('Configuración guardada exitosamente! Reiniciando aplicación...', true);
-      
+      showStatus(
+        'Configuración guardada exitosamente! Reiniciando aplicación...',
+        true
+      );
+
       // Reiniciar aplicación después de 2 segundos
       setTimeout(async () => {
         await window.electronAPI.restartApp();
@@ -120,16 +123,20 @@ async function saveConfiguration() {
 }
 
 // Manejar envío del formulario
-form.addEventListener('submit', async (event) => {
+form.addEventListener('submit', async event => {
   event.preventDefault();
   await saveConfiguration();
 });
 
 // Botón para probar conexión
-document.getElementById('test-button').addEventListener('click', testConnection);
+document
+  .getElementById('test-button')
+  .addEventListener('click', testConnection);
 
 // Botón para probar configuraciones SSL
-document.getElementById('test-ssl-button').addEventListener('click', testSSLConfigurations);
+document
+  .getElementById('test-ssl-button')
+  .addEventListener('click', testSSLConfigurations);
 
 // Probar diferentes configuraciones SSL
 async function testSSLConfigurations() {
@@ -137,7 +144,7 @@ async function testSSLConfigurations() {
     server: serverInput.value.trim(),
     database: databaseInput.value.trim(),
     user: usernameInput.value.trim(),
-    password: passwordInput.value
+    password: passwordInput.value,
   };
 
   // Validar campos requeridos
@@ -149,21 +156,23 @@ async function testSSLConfigurations() {
   try {
     showStatus('Probando diferentes configuraciones SSL...', true);
     const results = await window.electronAPI.testDatabaseSSLConfigs(config);
-    
+
     let message = 'Resultados de pruebas SSL:\n\n';
     let hasSuccess = false;
-    
+
     results.forEach(result => {
       const status = result.success ? '✅' : '❌';
       message += `${status} ${result.name}: ${result.message}\n`;
       if (result.success) hasSuccess = true;
     });
-    
+
     if (hasSuccess) {
-      message += '\n✅ Se encontró una configuración que funciona. Puede proceder a guardar.';
+      message +=
+        '\n✅ Se encontró una configuración que funciona. Puede proceder a guardar.';
       showStatus(message, true);
     } else {
-      message += '\n❌ Ninguna configuración funcionó. Verifique los datos de conexión.';
+      message +=
+        '\n❌ Ninguna configuración funcionó. Verifique los datos de conexión.';
       showStatus(message, false);
     }
   } catch (error) {

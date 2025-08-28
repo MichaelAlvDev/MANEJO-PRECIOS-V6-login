@@ -16,7 +16,9 @@ async function testDatabaseManager() {
     console.log(`   - Servidor: ${currentConfig.server}`);
     console.log(`   - Base de datos: ${currentConfig.database}`);
     console.log(`   - Usuario: ${currentConfig.user}`);
-    console.log(`   - Contraseña: ${currentConfig.password ? '***' : 'No definida'}`);
+    console.log(
+      `   - Contraseña: ${currentConfig.password ? '***' : 'No definida'}`
+    );
   } else {
     console.log('   No hay configuración guardada');
   }
@@ -41,7 +43,7 @@ async function testDatabaseManager() {
     server: 'test-server',
     database: 'test-database',
     user: 'test-user',
-    password: 'test-password'
+    password: 'test-password',
   };
 
   const saved = dbManager.saveConfiguration(testConfig);
@@ -56,7 +58,9 @@ async function testDatabaseManager() {
     console.log(`   - Servidor: ${savedConfig.server}`);
     console.log(`   - Base de datos: ${savedConfig.database}`);
     console.log(`   - Usuario: ${savedConfig.user}`);
-    console.log(`   - Contraseña: ${savedConfig.password ? '***' : 'No definida'}`);
+    console.log(
+      `   - Contraseña: ${savedConfig.password ? '***' : 'No definida'}`
+    );
   }
   console.log('');
 
@@ -74,7 +78,8 @@ async function testDatabaseManager() {
   // 6.5. Probar diferentes configuraciones SSL
   console.log('6.5. Probando diferentes configuraciones SSL...');
   try {
-    const sslResults = await dbManager.testConnectionWithDifferentSSLConfigs(testConfig);
+    const sslResults =
+      await dbManager.testConnectionWithDifferentSSLConfigs(testConfig);
     sslResults.forEach(result => {
       const status = result.success ? 'ÉXITO' : 'ERROR';
       console.log(`   ${result.name}: ${status} - ${result.message}`);

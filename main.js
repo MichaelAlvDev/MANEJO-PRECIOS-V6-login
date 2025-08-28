@@ -77,17 +77,21 @@ function stopServer() {
 function createLoginWindow() {
   loginWindow = new BrowserWindow({
     width: 400,
-    height: 300,
-    resizable: false,
+    height: 450,
+    resizable: true,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-    }
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: false,
+      contextIsolation: true,
+      webSecurity: true,
+      contentSecurityPolicy:
+        "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' http://localhost:3000; font-src 'self' data: https://cdn.jsdelivr.net; img-src 'self' data:",
+    },
+    frame: false,
   });
   loginWindow.loadFile('renderer/login.html');
-  loginWindow.on('closed', () => loginWindow = null);
+  loginWindow.on('closed', () => (loginWindow = null));
 }
-
 
 function createMainWindow() {
   mainWin = new BrowserWindow({
@@ -251,7 +255,7 @@ function abrirConfiguracion() {
 app.whenReady().then(async () => {
   // Verificar configuración de base de datos
   const dbConfigValid = await checkDatabaseConfiguration();
-  
+
   if (!dbConfigValid) {
     // Si la configuración no es válida, no crear la ventana principal
     // La ventana de configuración ya se abrió en checkDatabaseConfiguration()
@@ -450,7 +454,7 @@ async function checkDatabaseConfiguration() {
 
 // Recibe credenciales desde login.html
 ipcMain.on('login-attempt', (event, { username, password }) => {
-  // Aquí deberías validar usuario y contraseña (puedes consultar una base de datos, etc.)
+  //Validar Usuario y contraseña
   if (username === 'admin' && password === '1234') {
     // Login exitoso
     createMainWindow();
